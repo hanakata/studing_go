@@ -64,5 +64,45 @@ zoo
 # command-line-arguments
 .\main.go:10:14: undefined: AppName
 これはオプションで指定されたファイルのみを実行するため。
-なので実行する場合にはapp.goを指定する必要がある。アスタリスクも可。
+なので実行する場合にはapp.goを指定する必要がある。
 ただしbuidの場合は問題なく実行できる。
+その理由は原則として1つのディレクトリには1つのパッケージのみという決まりがあるから。
+なので同じディレクトリに2つ以上のパッケージを作成するとビルドが失敗する。
+
+■パッケージのテスト
+goはファイル名が_test.goとなっているものはテストするためのファイルとして特別扱いする。
+なので構成は以下の通り。
+zoo
+|----animals
+|       |----animals_test.go
+|       |----elephant.go
+|       |----monkey.go
+|       |----rabbit.go
+|----app.go
+|----main.go
+
+標準パッケージのtestingをインポートする必要がある。
+テストの記述に関しても管理しやすい単位でファイルを分けることが出来る。
+
+テストの実行コマンドは以下
+go test <テスト実行対象パッケージのディレクトリ>
+問題がなければokが出る。
+詳細を確認するコマンドは以下
+go test -v <テスト実行対象パッケージのディレクトリ>
+結果は以下のような感じ
+=== RUN   TestElephantFeed
+--- PASS: TestElephantFeed (0.00s)
+=== RUN   TestMonkeyFeed
+--- PASS: TestMonkeyFeed (0.00s)
+=== RUN   TestRabbitFeed
+--- PASS: TestRabbitFeed (0.00s)
+PASS
+失敗するとこんな感じ
+=== RUN   TestElephantFeed
+--- FAIL: TestElephantFeed (0.00s)
+    animals_test.go:12: Noodle != Grass
+=== RUN   TestMonkeyFeed
+--- PASS: TestMonkeyFeed (0.00s)
+=== RUN   TestRabbitFeed
+--- PASS: TestRabbitFeed (0.00s)
+FAIL
