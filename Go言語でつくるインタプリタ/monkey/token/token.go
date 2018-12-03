@@ -46,6 +46,8 @@ const (
 	EQ     = "=="
 	NOT_EQ = "!="
 	STRING = "STRING"
+
+	MACRO = "MACRO"
 )
 
 var keywords = map[string]TokenType{
@@ -56,6 +58,7 @@ var keywords = map[string]TokenType{
 	"if":     IF,
 	"else":   ELSE,
 	"return": RETURN,
+	"macro":  MACRO,
 }
 
 //keywordテーブルを確認して渡された識別子がキーワードではなかったかを確認する。
